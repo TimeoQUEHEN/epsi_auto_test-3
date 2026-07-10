@@ -1,4 +1,3 @@
-import pytest
 import responses
 
 from app.inscription import inscrire_cours_payant
