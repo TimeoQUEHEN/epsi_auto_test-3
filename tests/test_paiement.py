@@ -14,7 +14,7 @@ def test_paiment_ok(base_url, payment_api, compte_connu):
     )
     resultat = inscrire_cours_payant(base_url, payment_api, compte_connu, "python-avance")
 
-    assert resultat["ok"] == True
+    assert resultat["ok"]
     assert len(responses.calls) == 1
 
 @responses.activate
@@ -27,6 +27,6 @@ def test_paiment_bad(base_url, payment_api, compte_utilisateur):
     )
     resultat = inscrire_cours_payant(base_url, payment_api, compte_utilisateur, "python-avance")
 
-    assert resultat["ok"] == False
+    assert not resultat["ok"]
     assert resultat["message"] == "Paiement refuse, verifiez votre carte"
     assert len(responses.calls) == 1

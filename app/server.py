@@ -1,5 +1,4 @@
 import os
-import uuid
 from faker import Faker
 from flask import Flask, redirect, render_template_string, request, url_for
 

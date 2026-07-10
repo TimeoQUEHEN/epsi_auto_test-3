@@ -1,5 +1,3 @@
-import pytest
-
 def test_deconnexion_retourne_a_lecran_login(session_connectee):
     # Arrange
     dashboard = session_connectee
