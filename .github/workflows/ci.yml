@@ -70,6 +70,7 @@ jobs:
       - name: Installer Chrome et chromedriver
         uses: browser-actions/setup-chrome@v1
         with:
+          chrome-version: stable
           install-chromedriver: true
 
       - name: Demarrer l'application Flask
