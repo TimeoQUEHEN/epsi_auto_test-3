@@ -22,7 +22,7 @@ def base_url():
 
 @pytest.fixture
 def driver():
-    headless = os.getenv("HEADLESS", "true").lower() != "false"
+    headless = True #os.getenv("HEADLESS", "true").lower() != "false"
     options = Options()
     if headless:
         options.add_argument("--headless=new")
