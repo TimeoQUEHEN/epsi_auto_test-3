@@ -1,0 +1,88 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Installer Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Installer ruff
+        run: pip install ruff
+
+      - name: Lancer ruff
+        run: ruff check .
+
+  unit_tests:
+    runs-on: ubuntu-latest
+    needs: lint
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Installer Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Installer les dependances
+        run: |
+          pip install -r requirements.txt
+          pip install pytest-html
+
+      - name: Lancer les tests unitaires / mockes
+        run: pytest -m "not e2e" --html=rapport-unit.html --self-contained-html
+
+      - name: Uploader le rapport (unit)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: rapport-tests-unit
+          path: rapport-unit.html
+
+  e2e_tests:
+    runs-on: ubuntu-latest
+    needs: unit_tests
+    env:
+      BASE_URL: http://localhost:8000
+      PAYMENT_API_URL: http://localhost:9000/pay
+      HEADLESS: "true"
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Installer Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Installer les dependances
+        run: |
+          pip install -r requirements.txt
+          pip install pytest-html
+
+      - name: Installer Chrome et chromedriver
+        uses: browser-actions/setup-chrome@v1
+        with:
+          install-chromedriver: true
+
+      - name: Demarrer l'application Flask
+        run: |
+          python app.py &
+          sleep 3
+
+      - name: Lancer les tests E2E
+        run: pytest -m "e2e" --html=rapport-e2e.html --self-contained-html
+
+      - name: Uploader le rapport (e2e)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: rapport-tests
+          path: rapport-e2e.html
