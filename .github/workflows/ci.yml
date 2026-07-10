@@ -34,7 +34,7 @@ jobs:
 
       - name: Installer les dependances
         run: |
-          pip install -r requirements.txt
+          pip install -r ./app/requirements.txt
           pip install pytest-html
 
       - name: Lancer les tests unitaires / mockes
@@ -64,7 +64,7 @@ jobs:
 
       - name: Installer les dependances
         run: |
-          pip install -r requirements.txt
+          pip install -r ./app/requirements.txt
           pip install pytest-html
 
       - name: Installer Chrome et chromedriver
