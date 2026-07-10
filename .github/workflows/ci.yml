@@ -37,8 +37,8 @@ jobs:
           pip install -r ./app/requirements.txt
           pip install pytest-html
 
-      - name: Lancer les tests unitaires / mockes
-        run: pytest -m "not e2e" --html=rapport-unit.html --self-contained-html
+      - name: Lancer les tests unitaires
+        run: pytest -m unit --html=rapport-unit.html --self-contained-html
 
       - name: Uploader le rapport (unit)
         if: always()
@@ -74,11 +74,14 @@ jobs:
 
       - name: Demarrer l'application Flask
         run: |
-          python app.py &
-          sleep 3
+          python -m app.server &
+          for i in $(seq 1 30); do
+            curl -sf http://localhost:8000/login && break
+            sleep 1
+          done
 
       - name: Lancer les tests E2E
-        run: pytest -m "e2e" --html=rapport-e2e.html --self-contained-html
+        run: pytest -m e2e --html=rapport-e2e.html --self-contained-html
 
       - name: Uploader le rapport (e2e)
         if: always()
